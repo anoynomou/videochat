@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="https://i.pinimg.com/736x/38/a8/bd/38a8bd3398a1a0ca0c790ac66df695ed.jpg">
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div style="width: 100%;height: 100%;">
+
+
+<div id="Video" style="width: 100%;margin-top: 10%;display: flex;flex-wrap: wrap;">
+
+<video id="a1" style="width: 445px;height: 445px;outline: 3px green;display: flex;display: inline;border: 2px solid red;" autoplay  >
+
+
+</video>
+
+<video id="a2" style="width: 445px;height: 445px;outline: 3px green;border: 2px solid rgb(25, 0, 255) ;" autoplay >
+
+
+</video>
+
+
+
+</div>
+
+<text id="t1" style="font-size: 20px;"></text>
+
+<input id="UID" type="text"  >
+<button id="btn" onclick="Callnow()" > call</button>
+
+    </div>
+<script>
+
+
+
+var Myd = document.getElementById('t1');
+
+
+
+var myid = ''
+
+
+const iceConfiguration = {
+    iceServers: [
+   { url: "turn:numb.viagenie.ca:3478", username: "loremoxi9985@gmail.com", "credential": "12733245" },
+    ]
+}
+
+
+
+
+
+var peer = new Peer(iceConfiguration)
+
+
+
+var AddVideo = document.getElementById('a1');
+var Callervideo = document.getElementById('a2');
+
+
+
+peer.on('open', function(id) {
+  myid = id;
+  console.log(id);
+  Myd.innerText = id
+
+});
+
+
+
+
+
+
+
+function Callnow(){
+
+navigator.mediaDevices.getUserMedia({video:true,audio:true}).then((streem)=>{
+var opouserid = document.getElementById('UID').value;
+
+var call = peer.call(opouserid,streem);
+
+
+call.on('stream', function(callerstreem) {
+  // `stream` is the MediaStream of the remote peer.
+  // Here you'd add it to an HTML video/canvas element.
+  Callervideo.srcObject = callerstreem;
+});
+
+})
+
+}
+
+
+
+
+
+navigator.mediaDevices.getUserMedia({video:true,audio:true}).then((streem)=>{
+AddVideo.srcObject = streem;
+
+
+
+
+
+
+peer.on('call', function(call) {
+  // Answer the call, providing our mediaStream
+  call.answer(streem);
+
+call.on('stream', function(callerstreem) {
+  // `stream` is the MediaStream of the remote peer.
+  // Here you'd add it to an HTML video/canvas element.
+  Callervideo.srcObject = callerstreem;
+});
+
+});
+
+
+
+
+
+
+}).catch((err)=>{console.log(err)});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
